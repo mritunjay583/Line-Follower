@@ -1,0 +1,203 @@
+#define LM1 3
+#define LM2 4    // rear motor
+#define LM3 5
+#define RM1 6   // front motor
+#define RM2 7
+#define RM3 8
+
+int LS=10; //1st ir sensor
+int MS=11; //2nd ir sensor
+int RS=12; //3rd ir sensor
+
+
+void setup()
+{
+  Serial.begin(9600);
+
+  pinMode(LM1,OUTPUT);
+  pinMode(LM2,OUTPUT);
+  pinMode(LM3,OUTPUT);
+  pinMode(RM1,OUTPUT);
+  pinMode(RM2,OUTPUT);
+  pinMode(RM3,OUTPUT);
+  
+  pinMode(RS,INPUT);
+  pinMode(MS,INPUT);
+  pinMode(LS,INPUT);
+  
+}
+
+void stopCar()
+{
+  digitalWrite(LM1,0);
+  digitalWrite(LM2,LOW);
+  digitalWrite(LM3,LOW);
+  digitalWrite(RM1,LOW);
+  digitalWrite(RM2,LOW);
+  digitalWrite(RM3,0);
+  //delay(50);
+}
+void moveForward()
+{
+  digitalWrite(LM1,100);
+  digitalWrite(LM2,HIGH);
+  digitalWrite(LM3,LOW);
+  digitalWrite(RM1,HIGH);
+  digitalWrite(RM2,LOW);
+  digitalWrite(RM3,100);
+  //delay(50);
+}
+
+void turnMediumLeft()
+{
+  digitalWrite(LM1,10);
+  digitalWrite(LM2,HIGH);
+  digitalWrite(LM3,LOW);
+  digitalWrite(RM1,LOW);
+  digitalWrite(RM2,LOW);
+  digitalWrite(RM3,0);
+  delay(2);
+}
+void turnMediumRight()
+{
+  digitalWrite(LM1,0);
+  digitalWrite(LM2,LOW);
+  digitalWrite(LM3,LOW);
+  digitalWrite(RM1,HIGH);
+  digitalWrite(RM2,LOW);
+  digitalWrite(RM3,10);
+  delay(2);
+}
+void turnSharpLeft()
+{
+  digitalWrite(LM1,10);
+  digitalWrite(LM2,HIGH);
+  digitalWrite(LM3,LOW);
+  digitalWrite(RM1,LOW);
+  digitalWrite(RM2,HIGH);
+  digitalWrite(RM3,10);
+  //delay(10);
+}
+
+void turnSharpRight()
+{
+  digitalWrite(LM1,10);
+  digitalWrite(LM2,LOW);
+  digitalWrite(LM3,HIGH);
+  digitalWrite(RM1,HIGH);
+  digitalWrite(RM2,LOW);
+  digitalWrite(RM3,10);
+  //delay(10);
+}
+void findPath2()
+{
+  Serial.print("hello2");
+  digitalWrite(LM1,100);
+  digitalWrite(LM2,HIGH);
+  digitalWrite(LM3,LOW);
+  digitalWrite(RM3,100);
+  digitalWrite(RM1,LOW);
+  digitalWrite(RM2,HIGH);
+  delay(500);
+}
+
+void findPath1()
+{
+  Serial.print("hello");
+  digitalWrite(LM1,20);
+  digitalWrite(LM2,HIGH);
+  digitalWrite(LM3,LOW);
+  digitalWrite(RM3,20);
+  digitalWrite(RM1,LOW);
+  digitalWrite(RM2,HIGH); 
+  //delay();
+  if((digitalRead(LS)==1)&&(digitalRead(MS)==0)&&(digitalRead(RS)==1)||
+     (digitalRead(LS)==1)&&(digitalRead(MS)==1)&&(digitalRead(RS)==0)||
+     (digitalRead(LS)==0)&&(digitalRead(MS)==0)&&(digitalRead(RS)==1)||
+     (digitalRead(LS)==0)&&(digitalRead(MS)==1)&&(digitalRead(RS)==0)||
+     (digitalRead(LS)==1)&&(digitalRead(MS)==0)&&(digitalRead(RS)==0))
+     {
+     stopCar();
+     delay(500);
+     turnSharpRight();
+     delay(150);
+     return;
+     }
+ /*else
+  { 
+    digitalWrite(LM1,20);
+    digitalWrite(LM2,HIGH);
+    digitalWrite(LM3,LOW);
+    digitalWrite(RM1,HIGH);
+    digitalWrite(RM2,LOW);
+    digitalWrite(RM3,20);
+    delay(100);
+    
+     if((digitalRead(LS)==0)&&(digitalRead(MS)==1)&&(digitalRead(RS)==1)||
+     (digitalRead(LS)==1)&&(digitalRead(MS)==0)&&(digitalRead(RS)==1)||
+     (digitalRead(LS)==1)&&(digitalRead(MS)==1)&&(digitalRead(RS)==0)||
+     (digitalRead(LS)==0)&&(digitalRead(MS)==0)&&(digitalRead(RS)==1)||
+     (digitalRead(LS)==1)&&(digitalRead(MS)==0)&&(digitalRead(RS)==0))
+     {
+      stopCar();
+      //delay(500);
+     }
+     return;
+  }*/
+}
+//int count;
+void loop() {
+
+  Serial.print(digitalRead(LS));
+  Serial.print(" ");
+  Serial.print(digitalRead(MS));
+  Serial.print(" ");
+  Serial.print(digitalRead(RS));
+  Serial.print("\n");
+   if((digitalRead(LS)==0)&&(digitalRead(MS)==0)&&(digitalRead(RS)==0)||
+     (digitalRead(LS)==1)&&(digitalRead(MS)==0)&&(digitalRead(RS)==1))
+     {
+      findPath1();
+      Serial.print("STOP\n");
+    }
+    if((digitalRead(LS)==1)&&(digitalRead(MS)==1)&&(digitalRead(RS)==1))
+    { 
+      stopCar();
+      delay(1000);
+      findPath2();
+    }
+    if((digitalRead(LS)==1)&&(digitalRead(MS)==0)&&(digitalRead(RS)==0))
+     {
+      Serial.print("turnSharpRight\n");
+      //stopCar();
+      turnSharpRight();
+      delay(20);
+     }
+
+     if((digitalRead(LS)==0)&&(digitalRead(MS)==1)&&(digitalRead(RS)==0))  
+     {
+      Serial.print("moveForward\n");
+      moveForward();
+     }
+     if((digitalRead(LS)==0)&&(digitalRead(MS)==0)&&(digitalRead(RS)==1))
+     {
+      Serial.print("turnSharpLeft\n");
+     // stopCar();
+      turnSharpLeft();
+      delay(20);
+     }
+
+     if((digitalRead(LS)==1)&&(digitalRead(MS)==1)&&(digitalRead(RS)==0))
+     {
+      Serial.print("turnMediumRight\n");
+      //stopCar();
+      turnMediumRight();
+     }
+
+    if((digitalRead(LS)==0)&&(digitalRead(MS)==1)&&(digitalRead(RS)==1))
+    {
+      Serial.print("turnMediumLeft\n");
+      //stopCar();
+      turnMediumLeft();
+    }
+} 
